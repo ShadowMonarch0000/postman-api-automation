@@ -6,7 +6,7 @@ A beginner-friendly API testing project that automates REST API checks with **Po
 
 ## Project Overview
 
-This project tests the demo REST API provided by [JSONPlaceholder](https://jsonplaceholder.typicode.com/). Postman test scripts validate HTTP status codes, JSON responses, response fields, data types, filtering, result limits, related comments, negative cases, and basic response-time expectations.
+This project tests the demo REST API provided by [JSONPlaceholder](https://jsonplaceholder.typicode.com/). Postman test scripts validate HTTP status codes, JSON responses, JSON Schema structure, required fields, data types, filtering, result limits, related comments, negative cases, and basic response-time expectations. A checked-in Postman environment file keeps the API base URL and default post ID configurable.
 
 > **Note:** JSONPlaceholder is a public demo API. Create, update, and delete requests are simulated; changes are not persisted like they would be in a production database.
 
@@ -23,8 +23,8 @@ The collection currently contains **14 requests** across these areas:
 
 | Area | Example checks |
 |---|---|
-| GET posts | Status code, JSON content, response time, required fields, data types |
-| GET single post | Requested ID matches response; headers and fields are valid |
+| GET posts | Status code, JSON content, response time, required fields, data types, JSON Schema |
+| GET single post | Requested ID matches response; JSON Schema, headers, and fields are valid |
 | POST create | HTTP 201 and expected response fields |
 | PUT update | HTTP 200 and updated values |
 | PATCH partial update | HTTP 200 and updated title |
@@ -56,14 +56,14 @@ npm install -g postman-cli
 Download or clone this repository, open a terminal in the folder containing the collection, and run:
 
 ```bash
-postman collection run "REST API Automation - JSONPlaceholder.postman_collection.json" --env-var "baseUrl=https://jsonplaceholder.typicode.com" --env-var "postId=1" -r cli,html
+postman collection run "REST API Automation - JSONPlaceholder.postman_collection.json" --environment "JSONPlaceholder Environment.postman_environment.json" -r cli,html
 ```
 
 Review the terminal output for passed and failed assertions. The HTML reporter generates a report file; check the CLI output for the report location.
 
 ## Continuous Integration (GitHub Actions)
 
-The workflow at [`.github/workflows/postman-api-tests.yml`](.github/workflows/postman-api-tests.yml) runs the collection automatically on pushes to `main`, pull requests, and manual workflow dispatches.
+The workflow at [`.github/workflows/postman-api-tests.yml`](.github/workflows/postman-api-tests.yml) runs the collection automatically on pushes to `main`, pull requests, and manual workflow dispatches. It loads variables from [`JSONPlaceholder Environment.postman_environment.json`](JSONPlaceholder%20Environment.postman_environment.json), so the base URL and default post ID are configured outside the request scripts.
 
 - View workflow runs: [GitHub Actions](https://github.com/ShadowMonarch0000/postman-api-automation/actions)
 - The workflow attempts to upload an HTML report as an artifact, including when tests fail.
@@ -77,6 +77,7 @@ The workflow at [`.github/workflows/postman-api-tests.yml`](.github/workflows/po
 │   └── workflows/
 │       └── postman-api-tests.yml
 ├── REST API Automation - JSONPlaceholder.postman_collection.json
+├── JSONPlaceholder Environment.postman_environment.json
 └── README.md
 ```
 
