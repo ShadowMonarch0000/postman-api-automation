@@ -17,6 +17,14 @@ The project tests [JSONPlaceholder](https://jsonplaceholder.typicode.com/), a pu
 - **GitHub Actions** — automated CI workflow on pushes, pull requests, and manual runs
 - **JSONPlaceholder** — demo REST API
 
+## Successful CI Test Run
+
+The screenshot below shows the GitHub Actions workflow run for this project.
+
+![Successful GitHub Actions test run](github-actions-success.png)
+
+[Open the workflow runs on GitHub](https://github.com/ShadowMonarch0000/postman-api-automation/actions)
+
 ## Test Coverage
 
 ### Main collection
@@ -86,6 +94,7 @@ The workflow in [`.github/workflows/postman-api-tests.yml`](.github/workflows/po
 ├── JSONPlaceholder Environment.postman_environment.json
 ├── Post ID Data-Driven Tests.postman_collection.json
 ├── post-id-test-data.json
+├── github-actions-success.png
 └── README.md
 ```
 
