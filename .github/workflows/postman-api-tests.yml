@@ -27,6 +27,13 @@ jobs:
             --environment "JSONPlaceholder Environment.postman_environment.json" \
             -r cli,html
 
+      - name: Run data-driven post lookup tests
+        run: |
+          postman collection run "Post ID Data-Driven Tests.postman_collection.json" \
+            --environment "JSONPlaceholder Environment.postman_environment.json" \
+            --iteration-data "post-id-test-data.json" \
+            -r cli,html
+
       - name: Upload HTML test report
         if: always()
         uses: actions/upload-artifact@v4
