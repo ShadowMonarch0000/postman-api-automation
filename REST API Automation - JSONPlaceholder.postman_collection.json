@@ -190,6 +190,126 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Advanced - Filter Posts and Validate User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/posts?userId=1&_limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "_limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response is JSON\", function () { pm.response.to.be.json; });",
+                  "const posts = pm.response.json();",
+                  "pm.test(\"Response is a non-empty array with at most five posts\", function () { pm.expect(posts).to.be.an(\"array\"); pm.expect(posts.length).to.be.within(1, 5); });",
+                  "pm.test(\"Every result matches the requested userId\", function () { posts.forEach(function (post) { pm.expect(post.userId).to.eql(1); }); });",
+                  "pm.test(\"Post IDs are unique\", function () { const ids = posts.map(function (post) { return post.id; }); pm.expect(new Set(ids).size).to.eql(ids.length); });",
+                  "pm.test(\"Every result has valid required fields\", function () { posts.forEach(function (post) { pm.expect(post.id).to.be.a(\"number\"); pm.expect(post.title).to.be.a(\"string\").and.not.empty; pm.expect(post.body).to.be.a(\"string\").and.not.empty; }); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Advanced - Validate Pagination Window",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/posts?_start=10&_limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "_start",
+                  "value": "10"
+                },
+                {
+                  "key": "_limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response is JSON\", function () { pm.response.to.be.json; });",
+                  "const posts = pm.response.json();",
+                  "pm.test(\"Pagination returns exactly five posts\", function () { pm.expect(posts).to.be.an(\"array\").with.lengthOf(5); });",
+                  "pm.test(\"Pagination returns the expected ID window\", function () { const ids = posts.map(function (post) { return post.id; }); pm.expect(ids).to.eql([11, 12, 13, 14, 15]); });",
+                  "pm.test(\"Pagination results are in ascending ID order\", function () { const ids = posts.map(function (post) { return post.id; }); pm.expect(ids).to.eql(ids.slice().sort(function (a, b) { return a - b; })); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Advanced - Filter With No Matching User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/posts?userId=9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "9999"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response is JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"No matching records returns an empty array\", function () { const data = pm.response.json(); pm.expect(data).to.be.an(\"array\").that.is.empty; });"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
