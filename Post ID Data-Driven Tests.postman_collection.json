@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Data-Driven Post Lookup Tests",
+    "description": "Runs the same GET /posts/:id checks against multiple rows from post-id-test-data.json.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Post by Data-Driven ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const data = pm.response.json();",
+              "const expectedPostId = Number(pm.iterationData.get(\"postId\"));",
+              "const expectedUserId = Number(pm.iterationData.get(\"expectedUserId\"));",
+              "",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"Returned post ID matches this data row\", function () {",
+              "    pm.expect(data.id).to.eql(expectedPostId);",
+              "});",
+              "",
+              "pm.test(\"Returned user ID matches expected user\", function () {",
+              "    pm.expect(data.userId).to.eql(expectedUserId);",
+              "});",
+              "",
+              "pm.test(\"Post has valid required fields\", function () {",
+              "    pm.expect(data).to.have.all.keys(\"userId\", \"id\", \"title\", \"body\");",
+              "    pm.expect(data.title).to.be.a(\"string\").and.not.empty;",
+              "    pm.expect(data.body).to.be.a(\"string\").and.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/{{postId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
