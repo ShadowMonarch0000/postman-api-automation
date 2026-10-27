@@ -1,0 +1,26 @@
+[
+  {
+    "postId": 1,
+    "expectedUserId": 1
+  },
+  {
+    "postId": 2,
+    "expectedUserId": 1
+  },
+  {
+    "postId": 3,
+    "expectedUserId": 1
+  },
+  {
+    "postId": 10,
+    "expectedUserId": 1
+  },
+  {
+    "postId": 11,
+    "expectedUserId": 2
+  },
+  {
+    "postId": 50,
+    "expectedUserId": 5
+  }
+]
