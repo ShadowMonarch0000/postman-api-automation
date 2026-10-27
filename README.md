@@ -2,41 +2,41 @@
 
 [![Postman API Automation Tests](https://github.com/ShadowMonarch0000/postman-api-automation/actions/workflows/postman-api-tests.yml/badge.svg)](https://github.com/ShadowMonarch0000/postman-api-automation/actions/workflows/postman-api-tests.yml)
 
-A beginner-friendly API testing project that automates REST API checks with **Postman** and runs them in **GitHub Actions CI/CD**.
+An API automation testing project using **Postman**, **Postman CLI**, and **GitHub Actions**. It tests REST endpoints, validates responses with JavaScript assertions, and runs automatically in CI.
 
 ## Project Overview
 
-This project tests the demo REST API provided by [JSONPlaceholder](https://jsonplaceholder.typicode.com/). Postman test scripts validate HTTP status codes, JSON responses, JSON Schema structure, required fields, data types, filtering, result limits, related comments, negative cases, and basic response-time expectations. A checked-in Postman environment file keeps the API base URL and default post ID configurable.
+The project tests [JSONPlaceholder](https://jsonplaceholder.typicode.com/), a public demo REST API. It includes a main collection for common API scenarios and a separate data-driven collection that tests multiple post IDs using JSON test data.
 
-> **Note:** JSONPlaceholder is a public demo API. Create, update, and delete requests are simulated; changes are not persisted like they would be in a production database.
+> **Note:** JSONPlaceholder is a demo API. POST, PUT, PATCH, and DELETE responses are simulated; changes are not persisted like they would be in a production database.
 
 ## Tech Stack
 
-- Postman — request collection and JavaScript assertions
-- Postman CLI — command-line collection execution
-- GitHub Actions — automated CI/CD workflow
-- JSONPlaceholder — demo REST API
+- **Postman** — API requests and JavaScript test assertions
+- **Postman CLI** — command-line execution and HTML reports
+- **GitHub Actions** — automated CI workflow on pushes, pull requests, and manual runs
+- **JSONPlaceholder** — demo REST API
 
 ## Test Coverage
 
-The collection currently contains **14 requests** across these areas:
+### Main collection
 
-| Area | Example checks |
+| Area | Example validations |
 |---|---|
-| GET posts | Status code, JSON content, response time, required fields, data types, JSON Schema |
-| GET single post | Requested ID matches response; JSON Schema, headers, and fields are valid |
-| POST create | HTTP 201 and expected response fields |
-| PUT update | HTTP 200 and updated values |
-| PATCH partial update | HTTP 200 and updated title |
+| GET requests | Status codes, JSON content, headers, response time, required fields and data types |
+| Schema validation | JSON response structure |
+| POST, PUT and PATCH | Expected status codes and returned field values |
 | DELETE | Successful response status |
-| Negative tests | Invalid post and invalid endpoint return 404 |
-| Users API | User list and single-user fields |
-| Filter posts | All returned posts match user ID 1 |
-| Limit results | Exactly five posts; IDs are numeric and unique |
-| Post comments | Comments relate to post 1; required fields and email format |
-| Boundary test | Post ID 0 returns 404 |
+| Negative and boundary cases | Invalid post, invalid endpoint, and post ID 0 |
+| Users and comments | Required fields and relationships between resources |
+| Query parameters | Filtering by user, result limits, and empty results when no user matches |
+| Pagination | Five posts returned for the requested pagination window, with expected IDs |
 
-The collection uses Postman's built-in test scripts. The total assertion count can change as tests are added or edited.
+### Data-driven collection
+
+The separate **Post ID Data-Driven Tests** collection uses `post-id-test-data.json` to run the same request and assertions against **six post IDs**. Each iteration checks the status code, JSON response, returned post ID, expected user ID, and required fields.
+
+This demonstrates reusable tests with external test data rather than duplicating a request for every input.
 
 ## Run Locally
 
@@ -51,23 +51,29 @@ Install Postman CLI:
 npm install -g postman-cli
 ```
 
-### 2. Run the collection
+### 2. Run the main collection
 
-Download or clone this repository, open a terminal in the folder containing the collection, and run:
+Run these commands from the repository root:
 
 ```bash
 postman collection run "REST API Automation - JSONPlaceholder.postman_collection.json" --environment "JSONPlaceholder Environment.postman_environment.json" -r cli,html
 ```
 
-Review the terminal output for passed and failed assertions. The HTML reporter generates a report file; check the CLI output for the report location.
+### 3. Run the data-driven tests
 
-## Continuous Integration (GitHub Actions)
+```bash
+postman collection run "Post ID Data-Driven Tests.postman_collection.json" --environment "JSONPlaceholder Environment.postman_environment.json" --iteration-data "post-id-test-data.json" -r cli,html
+```
 
-The workflow at [`.github/workflows/postman-api-tests.yml`](.github/workflows/postman-api-tests.yml) runs the collection automatically on pushes to `main`, pull requests, and manual workflow dispatches. It loads variables from [`JSONPlaceholder Environment.postman_environment.json`](JSONPlaceholder%20Environment.postman_environment.json), so the base URL and default post ID are configured outside the request scripts.
+Review the CLI output for passed and failed assertions. The HTML reporter generates a report; check the CLI output for its location.
 
-- View workflow runs: [GitHub Actions](https://github.com/ShadowMonarch0000/postman-api-automation/actions)
-- The workflow attempts to upload an HTML report as an artifact, including when tests fail.
-- To download a report, open a successful or failed workflow run, scroll to **Artifacts**, and select **postman-api-test-report**. Extract the ZIP file to view the HTML report.
+## Continuous Integration
+
+The workflow in [`.github/workflows/postman-api-tests.yml`](.github/workflows/postman-api-tests.yml) runs both collections on pushes to `main`, pull requests, and manual workflow dispatches.
+
+- [View workflow runs and CI status](https://github.com/ShadowMonarch0000/postman-api-automation/actions)
+- The workflow uploads an HTML report artifact when available, even if a test step fails.
+- To view a report, open a workflow run, scroll to **Artifacts**, download `postman-api-test-report`, and extract the ZIP file.
 
 ## Repository Structure
 
@@ -78,17 +84,21 @@ The workflow at [`.github/workflows/postman-api-tests.yml`](.github/workflows/po
 │       └── postman-api-tests.yml
 ├── REST API Automation - JSONPlaceholder.postman_collection.json
 ├── JSONPlaceholder Environment.postman_environment.json
+├── Post ID Data-Driven Tests.postman_collection.json
+├── post-id-test-data.json
 └── README.md
 ```
 
-## Learning Goals
+## Skills Demonstrated
 
-- Understand REST methods: GET, POST, PUT, PATCH, DELETE
-- Write automated assertions in Postman
-- Validate response status, structure, headers, and data types
-- Test query parameters, related resources, and invalid inputs
-- Run API tests automatically through CI/CD
+- REST API testing with GET, POST, PUT, PATCH, and DELETE
+- Writing reusable JavaScript assertions in Postman
+- Validating response codes, payloads, schemas, data types, and relationships
+- Testing query parameters, pagination, negative cases, and boundary inputs
+- Data-driven testing with JSON iteration data
+- Running automated tests in CI with GitHub Actions
+- Generating and publishing HTML test reports as workflow artifacts
 
 ## Disclaimer
 
-This is an educational portfolio project using a public demo API. Its test results demonstrate the collection and workflow at the time of execution; they are not a guarantee of a production API's availability or behavior.
+This is an educational portfolio project using a public demo API. Test results demonstrate the behavior observed during a particular run and do not guarantee the availability or behavior of a production API.
