@@ -24,8 +24,7 @@ jobs:
       - name: Run Postman collection
         run: |
           postman collection run "REST API Automation - JSONPlaceholder.postman_collection.json" \
-            --env-var "baseUrl=https://jsonplaceholder.typicode.com" \
-            --env-var "postId=1" \
+            --environment "JSONPlaceholder Environment.postman_environment.json" \
             -r cli,html
 
       - name: Upload HTML test report
