@@ -41,3 +41,5 @@ jobs:
           name: postman-api-test-report
           path: postman-cli-reports/*.html
           if-no-files-found: warn
+      - name: Demonstrate failure
+          run: exit 1
