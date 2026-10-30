@@ -1,3 +1,4 @@
+testing
 # REST API Automation Testing using Postman
 
 [![Postman API Automation Tests](https://github.com/ShadowMonarch0000/postman-api-automation/actions/workflows/postman-api-tests.yml/badge.svg)](https://github.com/ShadowMonarch0000/postman-api-automation/actions/workflows/postman-api-tests.yml)
